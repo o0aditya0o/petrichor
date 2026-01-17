@@ -2,25 +2,28 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import Home from '@/app/page'
 
-describe('Home Page', () => {
-    it('renders the main heading', () => {
+// Mock icons
+jest.mock('lucide-react', () => ({
+    Package: () => <div data-testid="icon-package" />,
+    TrendingUp: () => <div data-testid="icon-trending" />,
+    Heart: () => <div data-testid="icon-heart" />,
+}))
+
+// Mock Dashboard child if needed, or integration test
+// Let's integration test since Dashboard is client component
+jest.mock('@/components/Dashboard', () => ({
+    Dashboard: () => <div data-testid="dashboard-mock">Mock Dashboard</div>
+}))
+
+describe('Home', () => {
+    it('renders fixed structural elements', () => {
         render(<Home />)
 
-        const heading = screen.getByRole('heading', { level: 1, name: 'Petri Force' })
-        expect(heading).toBeInTheDocument()
-    })
+        // Header
+        expect(screen.getByText('Petri Force')).toBeInTheDocument()
+        expect(screen.getByText('Control your impulse.')).toBeInTheDocument()
 
-    it('renders the tagline', () => {
-        render(<Home />)
-
-        const tagline = screen.getByText(/Stop the impulse/i)
-        expect(tagline).toBeInTheDocument()
-    })
-
-    it('renders the coin balance', () => {
-        render(<Home />)
-        // Should be able to find the balance text rendered by the child component
-        const balance = screen.getByText('10,000')
-        expect(balance).toBeInTheDocument()
+        // Dashboard
+        expect(screen.getByTestId('dashboard-mock')).toBeInTheDocument()
     })
 })

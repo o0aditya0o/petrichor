@@ -10,14 +10,17 @@ export interface HaulItem {
 interface BudgetState {
     monthlyBudget: number;
     haulItems: HaulItem[];
+    savedItems: HaulItem[];
     addToHaul: (item: HaulItem) => void;
     removeFromHaul: (itemId: string) => void;
+    addToSaved: (item: HaulItem) => void;
     getRemainingBalance: () => number;
 }
 
 export const useStore = create<BudgetState>((set, get) => ({
     monthlyBudget: 10000,
     haulItems: [],
+    savedItems: [],
     addToHaul: (item) =>
         set((state) => ({
             haulItems: [...state.haulItems, item]
@@ -25,6 +28,10 @@ export const useStore = create<BudgetState>((set, get) => ({
     removeFromHaul: (itemId) =>
         set((state) => ({
             haulItems: state.haulItems.filter((i) => i.id !== itemId)
+        })),
+    addToSaved: (item) =>
+        set((state) => ({
+            savedItems: [...state.savedItems, item]
         })),
     getRemainingBalance: () => {
         const { monthlyBudget, haulItems } = get();

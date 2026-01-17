@@ -89,6 +89,18 @@ export function ProductView({ id }: ProductViewProps) {
         }, 800);
     };
 
+    const addToSaved = useStore((state) => state.addToSaved);
+
+    const handleSave = () => {
+        addToSaved({
+            id: Math.random().toString(36).substr(2, 9),
+            title: product.title,
+            price: product.price,
+            date: new Date().toISOString()
+        });
+        router.push('/');
+    };
+
     return (
         <div className="min-h-screen pb-32 bg-background relative selection:bg-primary/30">
             {showTradeOff && (
@@ -154,7 +166,10 @@ export function ProductView({ id }: ProductViewProps) {
                         )}
                     </button>
 
-                    <button className="w-full py-4 rounded-2xl glass text-white/50 font-medium hover:text-white hover:bg-white/5 transition-all flex items-center justify-center gap-2 group">
+                    <button
+                        onClick={handleSave}
+                        className="w-full py-4 rounded-2xl glass text-white/50 font-medium hover:text-white hover:bg-white/5 transition-all flex items-center justify-center gap-2 group"
+                    >
                         <Heart className="w-5 h-5 group-hover:text-red-400 transition-colors" />
                         <span>Save for Later</span>
                     </button>
