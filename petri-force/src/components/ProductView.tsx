@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Share2, Heart, ShoppingBag, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useStore } from '@/store/useStore';
+import confetti from 'canvas-confetti';
 
 // Mock Data Dictionary (duplicated here or could be shared, keeping simple)
 const MOCK_PRODUCTS: Record<string, { title: string; price: number; description: string; imageColor: string }> = {
@@ -32,9 +34,40 @@ export function ProductView({ id }: ProductViewProps) {
     const product = MOCK_PRODUCTS[id] || MOCK_PRODUCTS['default'];
     const [isBuying, setIsBuying] = useState(false);
 
+    const addToHaul = useStore((state) => state.addToHaul);
+    const remainingBalance = useStore((state) => state.getRemainingBalance());
+
     const handleBuy = () => {
+        if (product.price > remainingBalance) {
+            alert('Not enough coins! (Trade-off coming soon)');
+            return;
+        }
+
         setIsBuying(true);
-        setTimeout(() => setIsBuying(false), 1000);
+
+        // Simulate API call / Animation delay
+        setTimeout(() => {
+            // Trgger Confetti
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#2dd4bf', '#3b82f6', '#ffffff']
+            });
+
+            // Add to Store
+            addToHaul({
+                id: Math.random().toString(36).substr(2, 9),
+                title: product.title,
+                price: product.price,
+                date: new Date().toISOString()
+            });
+
+            // Redirect
+            setTimeout(() => {
+                router.push('/');
+            }, 1000);
+        }, 800);
     };
 
     return (
