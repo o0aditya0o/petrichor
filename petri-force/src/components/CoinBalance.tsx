@@ -1,3 +1,5 @@
+'use client';
+
 import { Coins } from "lucide-react";
 import { useStore } from "@/store/useStore";
 
