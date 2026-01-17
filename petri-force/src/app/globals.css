@@ -2,17 +2,21 @@
 
 :root {
   /* Base Colors - Deep Charcoal / Slate */
-  --background: #020617; /* Slate 950 */
-  --foreground: #f8fafc; /* Slate 50 */
-  
+  --background: #020617;
+  /* Slate 950 */
+  --foreground: #f8fafc;
+  /* Slate 50 */
+
   /* Primary - Neon Mint */
-  --primary: #2dd4bf; /* Teal 400 */
+  --primary: #2dd4bf;
+  /* Teal 400 */
   --primary-foreground: #020617;
-  
+
   /* Secondary - Rain-slicked Blue */
-  --secondary: #3b82f6; /* Blue 500 */
+  --secondary: #3b82f6;
+  /* Blue 500 */
   --secondary-foreground: #ffffff;
-  
+
   /* Accents */
   --accent: #2a9d8f;
   --glass-border: rgba(255, 255, 255, 0.1);
@@ -28,7 +32,7 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-glass-border: var(--glass-border);
   --color-glass-bg: var(--glass-bg);
-  
+
   --font-sans: var(--font-inter);
 }
 
@@ -49,12 +53,32 @@ body {
 }
 
 .glass-card {
-  background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .glow-text {
   text-shadow: 0 0 20px rgba(45, 212, 191, 0.5);
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-50vh);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(50vh);
+    opacity: 0;
+  }
 }
