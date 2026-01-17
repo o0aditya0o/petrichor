@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useStore } from '@/store/useStore';
 import confetti from 'canvas-confetti';
+import { TradeOffModal } from './TradeOffModal';
 
 // Mock Data Dictionary (duplicated here or could be shared, keeping simple)
 const MOCK_PRODUCTS: Record<string, { title: string; price: number; description: string; imageColor: string }> = {
@@ -33,13 +34,38 @@ export function ProductView({ id }: ProductViewProps) {
     // For this mock, we lookup based on ID.
     const product = MOCK_PRODUCTS[id] || MOCK_PRODUCTS['default'];
     const [isBuying, setIsBuying] = useState(false);
+    const [showTradeOff, setShowTradeOff] = useState(false);
 
     const addToHaul = useStore((state) => state.addToHaul);
+    const removeFromHaul = useStore((state) => state.removeFromHaul);
     const remainingBalance = useStore((state) => state.getRemainingBalance());
+
+    const executePurchase = () => {
+        // Trgger Confetti
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#2dd4bf', '#3b82f6', '#ffffff']
+        });
+
+        // Add to Store
+        addToHaul({
+            id: Math.random().toString(36).substr(2, 9),
+            title: product.title,
+            price: product.price,
+            date: new Date().toISOString()
+        });
+
+        // Redirect
+        setTimeout(() => {
+            router.push('/');
+        }, 1000);
+    };
 
     const handleBuy = () => {
         if (product.price > remainingBalance) {
-            alert('Not enough coins! (Trade-off coming soon)');
+            setShowTradeOff(true);
             return;
         }
 
@@ -47,31 +73,31 @@ export function ProductView({ id }: ProductViewProps) {
 
         // Simulate API call / Animation delay
         setTimeout(() => {
-            // Trgger Confetti
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#2dd4bf', '#3b82f6', '#ffffff']
-            });
+            executePurchase();
+        }, 800);
+    };
 
-            // Add to Store
-            addToHaul({
-                id: Math.random().toString(36).substr(2, 9),
-                title: product.title,
-                price: product.price,
-                date: new Date().toISOString()
-            });
+    const handleSwap = (returnedItemId: string) => {
+        setShowTradeOff(false);
+        setIsBuying(true);
 
-            // Redirect
-            setTimeout(() => {
-                router.push('/');
-            }, 1000);
+        // Remove old item first
+        removeFromHaul(returnedItemId);
+
+        setTimeout(() => {
+            executePurchase();
         }, 800);
     };
 
     return (
         <div className="min-h-screen pb-32 bg-background relative selection:bg-primary/30">
+            {showTradeOff && (
+                <TradeOffModal
+                    newItemPrice={product.price}
+                    onSwap={handleSwap}
+                    onClose={() => setShowTradeOff(false)}
+                />
+            )}
             {/* Header Actions */}
             <div className="fixed top-0 left-0 right-0 z-40 px-6 py-6 flex items-center justify-between">
                 <Link href="/scan" className="p-3 glass rounded-full text-white/80 hover:text-white transition-colors">

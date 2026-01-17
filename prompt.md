@@ -111,3 +111,4 @@ This document contains a series of step-by-step prompts designed to be used with
 > 2. Show the total value of items 'Bought' vs 'Saved'.
 > 3. Add a visual progress bar showing how much of the 10,000 coin budget is consumed. Color it Green (Low), Yellow (Medium), or Red (High usage).
 > 4. Ensure the entire app feels cohesive and bug-free."
+> 5. Make sure all the existing test pass and also implement test for the new features you have added and make sure that these new tests pass as well
